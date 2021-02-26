@@ -1,0 +1,15 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[packages]
+django-environ = "==0.4.5"
+Django = "==3.1.5"
+gunicorn = "*"
+pytest-django = "*"
+uvicorn = "*"
+whitenoise = "*"
+
+[requires]
+python_version = "3.8"
