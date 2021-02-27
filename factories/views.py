@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, logout, login
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpResponseNotFound
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 
-from factories.forms import LoginForm
+from factories.forms import LoginForm, DataFixtureForm
 from factories.models import DataFixture
 
 
@@ -55,3 +55,18 @@ class DataFixtureDetailsView(View):
         query = get_object_or_404(DataFixture, pk=kwargs['pk'])
         query.delete()
         return HttpResponse('Deleted')
+
+
+class DataFixtureCreateView(View):
+    template_name = 'factories/fixture_create.html'
+    form_class = DataFixtureForm
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'form': self.form_class})
+
+    def post(self, request, *args, **kwargs):
+        pass
