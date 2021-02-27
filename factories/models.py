@@ -6,13 +6,13 @@ class DataFixture(models.Model):
     SEMICOLON = ';'
     SEPARATORS = (
         (COMMA, ','),
-        (SEMICOLON, ','),
+        (SEMICOLON, ';'),
     )
     SINGLE_QUOTE = "''"
     DOUBLE_QUOTE = '""'
     CHARACTERS = (
-        (SINGLE_QUOTE, "''"),
-        (DOUBLE_QUOTE, '""'),
+        (SINGLE_QUOTE, "'' Single quote"),
+        (DOUBLE_QUOTE, '"" Double quote'),
     )
     name = models.CharField(max_length=125)
     column_separator = models.CharField(choices=SEPARATORS, default=COMMA, max_length=5)

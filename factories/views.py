@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 
 from factories.forms import LoginForm
+from factories.models import DataFixture
 
 
 class LoginView(View):
@@ -39,4 +40,4 @@ class FixtureView(View):
         return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'records': DataFixture.objects.only('id', 'name', 'modified')})
