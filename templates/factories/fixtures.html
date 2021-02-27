@@ -1,9 +1,21 @@
 {% include "base.html" %}
 {% include "factories/nav-bar.html" %}
 
+<style>
+    .data-schema {
+        width: 980px;
+        margin: auto;
+    }
+    .data-schema-title, .add-new-schema {
+        display: inline-block;
+    }
+    .add-new-schema {
+        float: right;
+    }
+</style>
 <div class="data-schema">
-    <h2>Data schemas</h2>
-    <button class="add-new-schema"></button>
+    <h2 class="data-schema-title">Data schemas</h2>
+    <button type="button" class="btn btn-success add-new-schema">New schema</button>
     <table class="table">
         <thead>
         <tr>
