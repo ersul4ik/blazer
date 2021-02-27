@@ -42,6 +42,7 @@ class DataFixtureColumn(models.Model):
     fixture = models.ForeignKey('factories.DataFixture', on_delete=models.CASCADE, verbose_name='columns')
     name = models.CharField(max_length=120)
     sample = models.PositiveSmallIntegerField(choices=SAMPLES, blank=False)
+    order = models.PositiveSmallIntegerField(default=0)
     extra = models.JSONField(blank=True, null=True)
 
     def __str__(self):

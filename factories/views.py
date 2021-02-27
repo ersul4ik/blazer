@@ -56,6 +56,17 @@ class DataFixtureDetailsView(View):
         query.delete()
         return HttpResponse('Deleted')
 
+    def get(self, request, *args, **kwargs):
+        fixture = get_object_or_404(DataFixture, pk=kwargs['pk'])
+        form = DataFixtureForm(fixture.__dict__)
+        return render(request, 'factories/fixture_create.html', {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = DataFixtureForm(request.POST)
+        form.is_valid()
+        DataFixture.objects.update_or_create(id=kwargs['pk'], defaults=form.cleaned_data)
+        return redirect(reverse('fixture-list'))
+
 
 class DataFixtureCreateView(View):
     template_name = 'factories/fixture_create.html'
@@ -72,4 +83,4 @@ class DataFixtureCreateView(View):
         form = self.form_class(request.POST)
         form.is_valid()
         form.save()
-        return render(request, self.template_name, {'form': form})
+        return redirect(reverse('fixture-list'))
