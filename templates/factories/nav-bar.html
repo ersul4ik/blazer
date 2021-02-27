@@ -1,0 +1,38 @@
+<style>
+    .navbar-brand {
+        margin-left: 65px;
+        width: 142px;
+    }
+
+    .right-text {
+        color: rgba(0, 0, 0, 0.3);
+        margin-right: 11px;
+    }
+
+    .logout-text {
+        margin-right: 80px;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">FakeCSV</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'fixture-list' %}">Schemas <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <h6 class="right-text">Hello, <strong>{{ request.user.username }}</strong></h6>
+        <h6 class="right-text logout-text">Logout</h6>
+    </div>
+</nav>
+<script>
+    const LOGOUT_URL = "{% url 'logout' %}";
+    $('.logout-text').click(function () {
+        window.location = LOGOUT_URL;
+    })
+</script>
