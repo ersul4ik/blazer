@@ -43,15 +43,46 @@
         <tbody>
         {% for row in records %}
             <tr>
-                <th scope="row">{{ row.id }}</th>
+                <th scope="row" class="row-id">{{ row.id }}</th>
                 <td>{{ row.name }}</td>
                 <td>{{ row.modified|date:"Y-m-d" }}</td>
                 <td>
                     <a class="row-link" id="edit" href="#">Edit schema</a>
-                    <a class="row-link" id="delete" href="#">Delete</a>
+                    <a class="row-link" id="delete" href="#" name="{{ row.id }}">Delete</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $('#delete').click(function (e) {
+        const DELETE_URL = "{% url "fixture-list" %}";
+        const csrftoken = getCookie('csrftoken');
+
+        $.ajax({
+            url: DELETE_URL + this.name,
+            headers: {"X-CSRFToken": csrftoken},
+            type: 'DELETE',
+            success: function (result) {
+                location.reload();
+            }
+        });
+    })
+</script>
