@@ -69,4 +69,7 @@ class DataFixtureCreateView(View):
         return render(request, self.template_name, {'form': self.form_class})
 
     def post(self, request, *args, **kwargs):
-        pass
+        form = self.form_class(request.POST)
+        form.is_valid()
+        form.save()
+        return render(request, self.template_name, {'form': form})

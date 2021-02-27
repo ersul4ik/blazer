@@ -1,2 +1,43 @@
 {% include "base.html" %}
 {% include "factories/nav-bar.html" %}
+<style>
+    .content {
+        width: 980px;
+        margin: auto;
+    }
+
+    .content-element {
+        display: inline-block;
+    }
+
+    #submit-button {
+        float: right;
+        color: white;
+    }
+
+    .form-control {
+        width: 400px;
+    }
+</style>
+<div class="content">
+    <form method="post">
+        {% csrf_token %}
+        <h2 class="content-element">New schema</h2>
+        <button type="submit" class="btn btn-primary content-element" id="submit-button">Submit</button>
+        <div class="fixture-main">
+            <div>
+                <label for="">{{ form.name.label_tag }}</label>
+                {{ form.name }}
+            </div>
+            <div>
+                <label for="">{{ form.column_separator.label_tag }}</label>
+                {{ form.column_separator }}
+            </div>
+            <div>
+                <label for="">{{ form.string_character.label_tag }}</label>
+                {{ form.string_character }}
+            </div>
+        </div>
+        <div class="fixture-column"></div>
+    </form>
+</div>
