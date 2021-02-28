@@ -67,8 +67,8 @@ DATABASES = {
 }
 
 
-CELERY_BROKER_URL = env.str('REDIS_SERVER', 'redis://localhost:6379')
-CELERY_RESULT_BACKEND = env.str('REDIS_SERVER', 'redis://localhost:6379')
+CELERY_BROKER_URL = env.str('REDIS')
+CELERY_RESULT_BACKEND = env.str('REDIS')
 
 
 AUTH_PASSWORD_VALIDATORS = [
