@@ -1,4 +1,5 @@
 from celery.result import AsyncResult
+from django.conf import settings
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -116,11 +117,11 @@ class DataSetView(View):
 
     def get(self, request, *args, **kwargs):
         datasets = DataSet.objects.filter(fixture_id=kwargs['pk'])
-        return render(request, self.template_name, {'records': datasets})
+        return render(request, self.template_name, {'records': datasets, 'MEDIA_URL': settings.MEDIA_URL})
 
     def post(self, request, *args, **kwargs):
         rows_count = int(request.POST['rows-count'])
-        filename = f'{timezone.now().strftime("%Y-%m-%d %H:%M:%S")}.xlsx'
+        filename = f'{timezone.now().strftime("%Y-%m-%d(%H:%M:%S)")}.xlsx'
         task = generate_data_set.delay(kwargs['pk'], rows_count, filename)
         DataSet.objects.create(fixture_id=kwargs['pk'], task_id=task.id, filename=filename, status=task.status)
         return redirect(reverse('dataset-list', args=(kwargs['pk'], )))

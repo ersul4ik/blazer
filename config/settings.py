@@ -14,7 +14,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 
 SECRET_KEY = env.str('SECRET_KEY', '')
-DEBUG = env.str('DEBUG', False)
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -101,3 +101,19 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+USE_S3 = env.bool('USE_S3', False)
+if USE_S3:
+    AWS_ACCESS_KEY_ID = 'AKIAW5UF7ZPBAJY5LN3H'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'config.storages.PublicMediaStorage'

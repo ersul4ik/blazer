@@ -46,7 +46,7 @@
                     <td>{{ row.created }}</td>
                     <td class="status">{{ row.status }}</td>
                     <td class="download">
-                        <a class="row-link" href="/media/{{ row.filename }}">Download</a>
+                        <a class="row-link" href="{{ MEDIA_URL }}{{ row.filename }}">Download</a>
                     </td>
                 </tr>
             {% endfor %}
