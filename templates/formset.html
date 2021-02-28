@@ -1,10 +1,10 @@
 {% load crispy_forms_tags static %}
 <table>
-{{ formset.management_form|crispy }}
+    {{ formset.management_form|crispy }}
 
     {% for form in formset.forms %}
-            <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
-                {% for field in form.visible_fields %}
+        <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
+            {% for field in form.visible_fields %}
                 <td>
                     {# Include the hidden fields in the form #}
                     {% if forloop.first %}
@@ -13,10 +13,14 @@
                         {% endfor %}
                     {% endif %}
                     {{ field.errors.as_ul }}
-                    {{ field|as_crispy_field }}
+                    {% if field.name != "extra" %}
+                        {{ field|as_crispy_field }}
+                    {% else %}
+                        <div class="extra-range" style="display: none;">{{ field|as_crispy_field }}</div>
+                    {% endif %}
                 </td>
-                {% endfor %}
-            </tr>
+            {% endfor %}
+        </tr>
     {% endfor %}
 
 </table>
@@ -30,5 +34,24 @@
         addText: 'add another',
         deleteText: 'remove',
         prefix: '{{ formset.prefix }}',
+    });
+
+    let integerOption = '2'
+    $('.select').change(function () {
+        // Show the hidden extra field when the integer field is selected.
+        if ($(this).val() === integerOption) {
+            let extraRange = $(this).parent().parent().parent().next().children();
+            extraRange.show();
+        }
+    });
+    $(".select").each(function (index) {
+        // Make sure that extra section shown for the integer field.
+        let id = $(this).attr('id');
+        let selected = $(`#${id} option:selected`).val();
+
+        if (selected === integerOption) {
+            let extraRange = $(this).parent().parent().parent().next().children();
+            extraRange.show();
+        }
     });
 </script>

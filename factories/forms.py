@@ -13,6 +13,10 @@ class LoginForm(forms.Form):
 
 
 class DataFixtureColumnForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['extra'].widget.attrs['class'] = 'extra-range'
+
     class Meta:
         model = DataFixtureColumn
         exclude = ()
@@ -20,7 +24,7 @@ class DataFixtureColumnForm(forms.ModelForm):
 
 DataFixtureColumnFormSet = inlineformset_factory(
     DataFixture, DataFixtureColumn, form=DataFixtureColumnForm,
-    fields=['name', 'sample', 'order'], extra=3, can_delete=True
+    fields=['name', 'sample', 'extra', 'order'], extra=3, can_delete=True
 )
 
 
@@ -36,19 +40,19 @@ class DataFixtureForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = True
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3 create-label'
+        self.helper.form_class = 'form-group'
+        self.helper.label_class = 'col-md-3'
         self.helper.field_class = 'col-md-9 form-control'
         self.helper.layout = Layout(
             Div(
                 Field('name'),
                 Field('column_separator'),
                 Field('string_character'),
+                HTML('<br>'),
                 Fieldset(
-                    'Add titles',
+                    'Add columns',
                     Formset('columns'),
                 ),
-                HTML("<br>"),
                 ButtonHolder(Submit('submit', 'save')),
                 )
             )

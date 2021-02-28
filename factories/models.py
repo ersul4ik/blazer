@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import IntegerRangeField
 from django.db import models
 
 
@@ -43,7 +44,7 @@ class DataFixtureColumn(models.Model):
     name = models.CharField(max_length=120)
     sample = models.PositiveSmallIntegerField(choices=SAMPLES, blank=False)
     order = models.PositiveSmallIntegerField(default=0)
-    extra = models.JSONField(blank=True, null=True)
+    extra = IntegerRangeField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.name} {self.name}'
