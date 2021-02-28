@@ -1,16 +1,14 @@
 import xlsxwriter
 from celery import shared_task
-from django.utils import timezone
 
 from factories.models import DataFixture
 
 
 @shared_task
-def generate_data_set(fixture_id, row_count):
+def generate_data_set(fixture_id, row_count, filename):
     try:
         fixture = DataFixture.objects.get(id=fixture_id)
-        filename = f'media/{fixture}-{timezone.now().strftime("%Y-%m-%d %H:%M:%S")}.xlsx'
-        workbook = xlsxwriter.Workbook(filename)
+        workbook = xlsxwriter.Workbook(f'media/{filename}')
         worksheet = workbook.add_worksheet()
 
         column_number = 0

@@ -11,8 +11,9 @@
             justify-content: space-between
         }
 
-        #download {
+        .download {
             color: #0275D8;
+            display: none;
         }
     </style>
 {% endblock %}
@@ -40,12 +41,12 @@
             </thead>
             <tbody>
             {% for row in records %}
-                <tr>
-                    <th scope="row" class="row-id">{{ row.id }}</th>
+                <tr class="dataset-row">
+                    <th scope="row" class="row-id" name="{{ row.task_id }}">{{ row.id }}</th>
                     <td>{{ row.created }}</td>
-                    <td>{{ row.status }}</td>
-                    <td>
-                        <a class="row-link" id="download" href="{% url "fixture-update" row.id %}">Download</a>
+                    <td class="status">{{ row.status }}</td>
+                    <td class="download">
+                        <a class="row-link" href="/media/{{ row.filename }}">Download</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -53,3 +54,40 @@
         </table>
     </form>
 {% endblock %}
+<script>
+    function changeStatus(element, color, text) {
+        element.text(text);
+        element.css('color', 'white')
+        element.css('background-color', color)
+    }
+
+    function updateTaskStatus() {
+        $('.dataset-row').each(function (el) {
+            const taskID = $(this).children().first().attr('name');
+            const status = $(this).children().closest('.status');
+            const downloadSection = $(this).children().last();
+
+            $.ajax({
+                url: `/tasks/${taskID}`,
+            }).done(function (response) {
+                if (response.task_status === 'FAILURE') {
+                    changeStatus(status, '#E9302B', response.task_status);
+                }
+                if (response.task_status === 'SUCCESS') {
+                    changeStatus(status, '#5CB85C', response.task_status);
+                    downloadSection.css('display', 'block');
+                }
+                if (response.task_status === 'PENDING') {
+                    changeStatus(status, '#999999', response.task_status);
+                }
+            });
+        })
+    }
+
+    $(document).ready(function () {
+        updateTaskStatus();
+        window.setInterval(function () {
+            updateTaskStatus();
+        }, 3000);
+    });
+</script>

@@ -1,14 +1,18 @@
+from celery.result import AsyncResult
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
 
 from factories.forms import LoginForm, DataFixtureForm, DataFixtureColumnFormSet
 from factories.models import DataFixture, DataSet
+from factories.tasks import generate_data_set
 
 
 class LoginView(View):
@@ -114,4 +118,16 @@ class DataSetView(View):
         return render(request, self.template_name, {'records': DataSet.objects.all()})
 
     def post(self, request, *args, **kwargs):
+        rows_count = int(request.POST['rows-count'])
+        filename = f'{timezone.now().strftime("%Y-%m-%d %H:%M:%S")}.xlsx'
+        task = generate_data_set.delay(kwargs['pk'], rows_count, filename)
+        DataSet.objects.create(task_id=task.id, filename=filename, status=task.status)
         return redirect(reverse('dataset-list', args=(kwargs['pk'], )))
+
+
+class TaskDetailView(View):
+    def get(self, request, *args, **kwargs):
+        task = AsyncResult(str(kwargs['pk']))
+        if not task:
+            return JsonResponse({'task_status': 'UNKNOWN'}, status=404)
+        return JsonResponse({'task_status': task.status})
