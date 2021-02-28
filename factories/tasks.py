@@ -19,7 +19,7 @@ def generate_data_set(fixture_id, row_count):
             column_number += 1
 
         for i in range(1, row_count + 1):
-            worksheet.write_row(i, 0, fixture.get_fake_data())
+            worksheet.write_row(i, 0, fixture.prepare_fake_data())
 
         workbook.close()
         return

@@ -8,5 +8,5 @@ from factories.urls import urlpatterns as factories_patterns
 
 urlpatterns = [
     path('busmordor/', admin.site.urls),
-    path('dashboard/', include(factories_patterns)),
+    path('', include(factories_patterns)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

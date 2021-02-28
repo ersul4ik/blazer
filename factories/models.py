@@ -31,7 +31,7 @@ class DataFixture(models.Model):
         verbose_name = 'Data fixture'
         verbose_name_plural = 'Data fixtures'
 
-    def get_fake_data(self):
+    def prepare_fake_data(self):
         return [column.generate_fake_data() for column in self.columns.all()]
 
 
