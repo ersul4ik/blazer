@@ -15,7 +15,8 @@ class LoginForm(forms.Form):
 class DataFixtureColumnForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['extra'].widget.attrs['class'] = 'extra-range'
+        self.fields['extra'].widget.attrs['class'] = 'col-md-3'
+        self.fields['extra'].widget.attrs['min'] = 1
 
     class Meta:
         model = DataFixtureColumn
@@ -41,8 +42,6 @@ class DataFixtureForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = True
         self.helper.form_class = 'form-group'
-        self.helper.label_class = 'col-md-3'
-        self.helper.field_class = 'col-md-9 form-control'
         self.helper.layout = Layout(
             Div(
                 Field('name'),
