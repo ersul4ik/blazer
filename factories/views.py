@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.db import transaction
+from django.shortcuts import render, redirect
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
 
-from factories.forms import LoginForm, DataFixtureForm
+from factories.forms import LoginForm, DataFixtureForm, DataFixtureColumnFormSet
 from factories.models import DataFixture
 
 
@@ -41,46 +42,66 @@ class DataFixtureView(View):
         return super().dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'records': DataFixture.objects.only('id', 'name', 'modified')})
+        fixtures = DataFixture.objects.only('id', 'name', 'modified')
+        return render(request, self.template_name, {'records': fixtures})
 
 
-class DataFixtureDetailsView(View):
-    template_name = 'factories/fixture_details.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        query = get_object_or_404(DataFixture, pk=kwargs['pk'])
-        query.delete()
-        return HttpResponse('Deleted')
-
-    def get(self, request, *args, **kwargs):
-        fixture = get_object_or_404(DataFixture, pk=kwargs['pk'])
-        form = DataFixtureForm(fixture.__dict__)
-        return render(request, 'factories/fixture_create.html', {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = DataFixtureForm(request.POST)
-        form.is_valid()
-        DataFixture.objects.update_or_create(id=kwargs['pk'], defaults=form.cleaned_data)
-        return redirect(reverse('fixture-list'))
-
-
-class DataFixtureCreateView(View):
+class DataFixtureUpdate(UpdateView):
+    model = DataFixture
     template_name = 'factories/fixture_create.html'
     form_class = DataFixtureForm
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['columns'] = DataFixtureColumnFormSet(self.request.POST, instance=self.object)
+        else:
+            data['columns'] = DataFixtureColumnFormSet(instance=self.object)
+        return data
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'form': self.form_class})
+    def form_valid(self, form):
+        context = self.get_context_data()
+        columns = context['columns']
+        with transaction.atomic():
+            self.object = form.save()
+            if columns.is_valid():
+                columns.instance = self.object
+                columns.save()
+        return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        form.is_valid()
-        form.save()
-        return redirect(reverse('fixture-list'))
+    def get_success_url(self):
+        return reverse_lazy('fixture-list')
+
+
+class DataFixtureCreate(CreateView):
+    model = DataFixture
+    template_name = 'factories/fixture_create.html'
+    form_class = DataFixtureForm
+    success_url = None
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['columns'] = DataFixtureColumnFormSet(self.request.POST)
+        else:
+            data['columns'] = DataFixtureColumnFormSet()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        columns = context['columns']
+        with transaction.atomic():
+            self.object = form.save()
+            if columns.is_valid():
+                columns.instance = self.object
+                columns.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('fixture-update', kwargs={'pk': self.object.pk})
+
+
+class DataFixtureDelete(DeleteView):
+    model = DataFixture
+    template_name = 'factories/confirm_delete.html'
+    success_url = reverse_lazy('fixture-list')

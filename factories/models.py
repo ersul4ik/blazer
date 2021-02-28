@@ -39,7 +39,7 @@ class DataFixtureColumn(models.Model):
         (COMPANY, 'Company'),
         (ADDRESS, 'Address'),
     )
-    fixture = models.ForeignKey('factories.DataFixture', on_delete=models.CASCADE, verbose_name='columns')
+    fixture = models.ForeignKey('factories.DataFixture', on_delete=models.CASCADE, related_name='columns')
     name = models.CharField(max_length=120)
     sample = models.PositiveSmallIntegerField(choices=SAMPLES, blank=False)
     order = models.PositiveSmallIntegerField(default=0)
