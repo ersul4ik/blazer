@@ -12,6 +12,10 @@ uvicorn = "*"
 whitenoise = "*"
 django-crispy-forms = "*"
 psycopg2-binary = "==2.8.6"
+celery = "*"
+redis = "*"
+xlsxwriter = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.8"

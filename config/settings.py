@@ -70,6 +70,10 @@ DATABASES = {
 }
 
 
+CELERY_BROKER_URL = env.str('REDIS_SERVER', 'redis://localhost:6379')
+CELERY_RESULT_BACKEND = env.str('REDIS_SERVER', 'redis://localhost:6379')
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,3 +102,5 @@ STATICFILES_DIRS = (
 )
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
