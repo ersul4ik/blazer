@@ -4,7 +4,7 @@ from factories.forms import LoginForm
 
 
 def test_should_contain_login_form(client):
-    url = reverse('login-details')
+    url = reverse('login')
 
     response = client.get(url)
 
