@@ -32,9 +32,6 @@ REDIS_URL=
 - `./manage.py runserver 8000` - for running the web-server.
 - `celery -A config worker -l info` - for running the celery worker.
 
-When the project is up you should see smth like this:
-- Screen Auth
-
 
 ### Tests
 - `pytest`. Use this command to make sure that everything is ok.
