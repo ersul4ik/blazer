@@ -8,7 +8,7 @@ from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic.base import View
 
 from factories.forms import LoginForm, DataFixtureForm, DataFixtureColumnFormSet
-from factories.models import DataFixture
+from factories.models import DataFixture, DataSet
 
 
 class LoginView(View):
@@ -105,3 +105,13 @@ class DataFixtureDelete(DeleteView):
     model = DataFixture
     template_name = 'factories/confirm_delete.html'
     success_url = reverse_lazy('fixture-list')
+
+
+class DataSetView(View):
+    template_name = 'factories/datasets_list.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'records': DataSet.objects.all()})
+
+    def post(self, request, *args, **kwargs):
+        return redirect(reverse('dataset-list', args=(kwargs['pk'], )))

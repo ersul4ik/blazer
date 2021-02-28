@@ -22,6 +22,6 @@ def generate_data_set(fixture_id, row_count):
             worksheet.write_row(i, 0, fixture.prepare_fake_data())
 
         workbook.close()
-        return
+        return filename
     except DataFixture.DoesNotExist:
         return

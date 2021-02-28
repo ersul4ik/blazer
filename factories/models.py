@@ -66,3 +66,19 @@ class DataFixtureColumn(models.Model):
             self.ADDRESS: Faker().address(),
         }
         return column_types.get(self.sample)
+
+
+class DataSet(models.Model):
+    PROCESSING = 1
+    READY = 2
+    STATUSES = (
+        (PROCESSING, 'Processing'),
+        (READY, 'Ready'),
+    )
+    task_id = models.UUIDField()
+    filename = models.CharField(max_length=125)
+    status = models.CharField(choices=STATUSES, default=PROCESSING, max_length=25)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.task_id} - {self.status}'

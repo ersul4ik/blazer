@@ -1,0 +1,55 @@
+{% include "base.html" %}
+{% block extrastyle %}
+    <style>
+        .data-schema {
+            width: 980px;
+            margin: auto;
+        }
+
+        .title {
+            display: flex;
+            justify-content: space-between
+        }
+
+        #download {
+            color: #0275D8;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <form method="post" class="data-schema">
+        {% csrf_token %}
+        <div class="title">
+            <h2 class="data-schema-title">Data sets</h2>
+            <div>
+                <label>
+                    Rows:
+                    <input name="rows-count" type="number" min="1" max="1000">
+                </label>
+                <button type="submit" class="btn btn-success add-new-schema">Generate data</button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Created</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in records %}
+                <tr>
+                    <th scope="row" class="row-id">{{ row.id }}</th>
+                    <td>{{ row.created }}</td>
+                    <td>{{ row.status }}</td>
+                    <td>
+                        <a class="row-link" id="download" href="{% url "fixture-update" row.id %}">Download</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+{% endblock %}

@@ -9,4 +9,5 @@ urlpatterns = [
     path('add/', views.DataFixtureCreate.as_view(), name='fixture-add'),
     path('<int:pk>/update/', views.DataFixtureUpdate.as_view(), name='fixture-update'),
     path('<int:pk>/delete/', views.DataFixtureDelete.as_view(), name='fixture-delete'),
+    path('<int:pk>/datasets/', views.DataSetView.as_view(), name='dataset-list'),
 ]

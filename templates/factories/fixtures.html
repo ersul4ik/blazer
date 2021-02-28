@@ -24,34 +24,40 @@
 
     #delete {
         color: #D9534F;
+        margin-right: 10px;
+    }
+
+    #datasets {
+        color: green;
     }
 </style>
 {% block content %}
-<div class="data-schema">
-    <h2 class="data-schema-title">Data schemas</h2>
-    <a type="button" class="btn btn-success add-new-schema" href="{% url "fixture-add" %}">New schema</a>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Modified</th>
-            <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in records %}
+    <div class="data-schema">
+        <h2 class="data-schema-title">Data schemas</h2>
+        <a type="button" class="btn btn-success add-new-schema" href="{% url "fixture-add" %}">New schema</a>
+        <table class="table">
+            <thead>
             <tr>
-                <th scope="row" class="row-id">{{ row.id }}</th>
-                <td><a href="{% url "fixture-update" row.id %}">{{ row.name }}</a></td>
-                <td>{{ row.modified|date:"Y-m-d" }}</td>
-                <td>
-                    <a class="row-link" id="edit" href="{% url "fixture-update" row.id %}">Edit schema</a>
-                    <a class="row-link" id="delete" href="{% url "fixture-delete" row.id %}">Delete</a>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Modified</th>
+                <th scope="col">Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            {% for row in records %}
+                <tr>
+                    <th scope="row" class="row-id">{{ row.id }}</th>
+                    <td><a href="{% url "fixture-update" row.id %}">{{ row.name }}</a></td>
+                    <td>{{ row.modified|date:"Y-m-d" }}</td>
+                    <td>
+                        <a class="row-link" id="edit" href="{% url "fixture-update" row.id %}">Edit schema</a>
+                        <a class="row-link" id="delete" href="{% url "fixture-delete" row.id %}">Delete</a>
+                        <a class="row-link" id="datasets" href="{% url "dataset-list" row.id %}">Datasets</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
