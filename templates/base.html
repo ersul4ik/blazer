@@ -39,7 +39,7 @@
                 </li>
             </ul>
             <h6 class="right-text">Hello, <strong>{{ request.user.username }}</strong></h6>
-            <h6 class="right-text logout-text">Logout</h6>
+            <h6 class="right-text logout-text" id="logout">Logout</h6>
         </div>
     </nav>
 </header>
@@ -49,4 +49,10 @@
 </div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="{% static "js/bootstrap.js" %}"></script>
+<script>
+    const LOGOUT_URL = "{% url "logout" %}";
+    $("#logout").click(function () {
+        window.location = LOGOUT_URL;
+    })
+</script>
 </body>
