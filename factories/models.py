@@ -38,13 +38,24 @@ class DataFixture(models.Model):
 class DataFixtureColumn(models.Model):
     FULL_NAME = 1
     INTEGER = 2
-    COMPANY = 3
+    COMPANY_NAME = 3
     ADDRESS = 4
+    JOB = 5
+    EMAIL = 6
+    PHONE_NUMBER = 7
+    DOMAIN = 8
+    TEXT = 9
+    DATE = 10
     SAMPLES = (
         (FULL_NAME, 'Full name'),
         (INTEGER, 'Integer'),
-        (COMPANY, 'Company'),
+        (COMPANY_NAME, 'Company'),
         (ADDRESS, 'Address'),
+        (JOB, 'Job'),
+        (EMAIL, 'Email'),
+        (PHONE_NUMBER, 'Phone number'),
+        (DOMAIN, 'Domain name'),
+        (DATE, 'Date'),
     )
     fixture = models.ForeignKey('factories.DataFixture', on_delete=models.CASCADE, related_name='columns')
     name = models.CharField(max_length=120)
@@ -62,8 +73,12 @@ class DataFixtureColumn(models.Model):
         column_types = {
             self.FULL_NAME: Faker().name(),
             self.INTEGER: randrange(self.extra.lower, self.extra.upper) if self.extra else 0,
-            self.COMPANY: Faker().company(),
+            self.COMPANY_NAME: Faker().company(),
             self.ADDRESS: Faker().address(),
+            self.JOB: Faker().job(),
+            self.EMAIL: Faker().email(),
+            self.PHONE_NUMBER: Faker().phone_number(),
+            self.DOMAIN: Faker().domain_name(),
         }
         return column_types.get(self.sample)
 
