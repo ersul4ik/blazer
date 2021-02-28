@@ -14,7 +14,7 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 
 SECRET_KEY = env.str('SECRET_KEY', '')
-DEBUG = env.str('DEBUG', True)
+DEBUG = env.str('DEBUG', False)
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
