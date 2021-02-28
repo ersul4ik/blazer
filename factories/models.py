@@ -69,6 +69,7 @@ class DataFixtureColumn(models.Model):
 
 
 class DataSet(models.Model):
+    fixture = models.ForeignKey('factories.DataFixture', on_delete=models.CASCADE, related_name='datasets')
     task_id = models.UUIDField()
     filename = models.CharField(max_length=125)
     status = models.CharField(max_length=25)

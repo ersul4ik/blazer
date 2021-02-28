@@ -115,13 +115,14 @@ class DataSetView(View):
     template_name = 'factories/datasets_list.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {'records': DataSet.objects.all()})
+        datasets = DataSet.objects.filter(fixture_id=kwargs['pk'])
+        return render(request, self.template_name, {'records': datasets})
 
     def post(self, request, *args, **kwargs):
         rows_count = int(request.POST['rows-count'])
         filename = f'{timezone.now().strftime("%Y-%m-%d %H:%M:%S")}.xlsx'
         task = generate_data_set.delay(kwargs['pk'], rows_count, filename)
-        DataSet.objects.create(task_id=task.id, filename=filename, status=task.status)
+        DataSet.objects.create(fixture_id=kwargs['pk'], task_id=task.id, filename=filename, status=task.status)
         return redirect(reverse('dataset-list', args=(kwargs['pk'], )))
 
 

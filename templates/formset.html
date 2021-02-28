@@ -1,4 +1,13 @@
 {% load crispy_forms_tags static %}
+<style>
+    .delete-row {
+        color: #E9302B;
+        margin-left: 15px;
+    }
+    .buttonHolder {
+        margin-top: 20px;
+    }
+</style>
 <table>
     {{ formset.management_form|crispy }}
 
@@ -27,8 +36,8 @@
 <script src="{% static 'libraries/jquery.formset.js' %}"></script>
 <script type="text/javascript">
     $('.formset_row-{{ formset.prefix }}').formset({
-        addText: 'add another',
-        deleteText: 'remove',
+        addText: 'Add another',
+        deleteText: 'Delete',
         prefix: '{{ formset.prefix }}',
     });
 
